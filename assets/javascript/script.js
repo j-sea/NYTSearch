@@ -41,7 +41,7 @@ $('#searchButton').on('click', function(event){
     var searchQueryToUse = $('#searchInput').val();
     var startYear = $('#startYear').val();
     var endYear = $('#endYear').val();
-    var resultsMax = parseInt($('#disabledSelect option:select').text(), 10);
+    var resultsMax = parseInt($('#disabledSelect option:selected').text(), 10);
 
     grabNYTimesArticles(searchQueryToUse, resultsMax, startYear, endYear);
 });
