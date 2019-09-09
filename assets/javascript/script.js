@@ -41,11 +41,13 @@ $('#searchButton').on('click', function(event){
     var searchQueryToUse = $('#searchInput').val();
     var startYear = $('#startYear').val();
     var endYear = $('#endYear').val();
-    var resultsMax = parseInt($('#disabledSelect').val(), 10);
+    var resultsMax = parseInt($('#disabledSelect option:select').text(), 10);
 
     grabNYTimesArticles(searchQueryToUse, resultsMax, startYear, endYear);
 });
 
-$('#clearButton').on('click', function(){
+$('#clearButton').on('click', function(event){
+    event.preventDefault();
+
     $("#clearButton").empty();
 })
