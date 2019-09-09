@@ -4,29 +4,47 @@
 function grabNYTimesArticles(searchQuery, numberOfRecords, beginDate, endDate){
     console.log('grabbing new york times articles');
     
-    var queryURL = "https://api.nytimes.com/svc/search/v2/articlesearch.json?q=" + searchQuery + "&begin_date=" + beginDate + "&end_date=" + endDate + "&api-key=v9ZuAGpf5SLtPeFaivEQF3WEYT4taWAx";
-    
-    var results;
+    var queryURL;
+    if (beginDate !== '' && endDate !== '') {
+
+        queryURL = "https://api.nytimes.com/svc/search/v2/articlesearch.json?q=" + searchQuery + "&begin_date=" + beginDate + "&end_date=" + endDate + "&api-key=v9ZuAGpf5SLtPeFaivEQF3WEYT4taWAx";
+    }
+    else if (beginDate !== '') {
+        
+        queryURL = "https://api.nytimes.com/svc/search/v2/articlesearch.json?q=" + searchQuery + "&begin_date=" + beginDate + "&api-key=v9ZuAGpf5SLtPeFaivEQF3WEYT4taWAx";
+    }
+    else if (endDate !== '') {
+        
+        queryURL = "https://api.nytimes.com/svc/search/v2/articlesearch.json?q=" + searchQuery + "&end_date=" + endDate + "&api-key=v9ZuAGpf5SLtPeFaivEQF3WEYT4taWAx";
+    }
+    else {
+        
+        queryURL = "https://api.nytimes.com/svc/search/v2/articlesearch.json?q=" + searchQuery + "&api-key=v9ZuAGpf5SLtPeFaivEQF3WEYT4taWAx";
+    }
     
     $.ajax({
         url: queryURL,
     }).then(function(data){
-        results = data.response.docs;
 
-        if (numberOfRecords <= 10) {
-            for (var i = numberOfRecords; i < results.length; i++) {
-                results.pop();
-            }
+        for (var i = 0; i < numberOfRecords; i++) {
+            var url = data.response.docs[i].web_url;
+            var snippet = data.response.docs[i].snippet;
 
-            $('#search-results').text(JSON.stringify(results));
+            $('#results').append(`<p><a href="${url}">${snippet}</a></p>`);
         }
     });
-
-    return results;
 }
 
-$('#search-button').on('click', function(){
-    var searchQueryToUse = 'cat';
+$('#searchButton').on('click', function(event){
+    event.preventDefault();
 
-    var records = grabNYTimesArticles(searchQueryToUse, 10, '20190101', '20190909');
+    var searchQueryToUse = $('#searchInput').val();
+    var startYear = $('#startYear').val();
+    var endYear = $('#endYear').val();
+
+    grabNYTimesArticles(searchQueryToUse, 10, startYear, endYear);
 });
+
+$('#clearButton').on('click', function(){
+    $("#clearButton").empty();
+})
