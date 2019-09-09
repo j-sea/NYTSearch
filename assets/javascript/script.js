@@ -25,14 +25,12 @@ function grabNYTimesArticles(searchQuery, numberOfRecords, beginDate, endDate){
     $.ajax({
         url: queryURL,
     }).then(function(data){
-        results = data.response.docs;
 
-        if (numberOfRecords <= 10) {
-            for (var i = numberOfRecords; i < results.length; i++) {
-                results.pop();
-            }
+        for (var i = 0; i < numberOfRecords; i++) {
+            var url = data.response.docs[i].web_url;
+            var snippet = data.response.docs[i].snippet;
 
-            $('#results').text(JSON.stringify(results));
+            $('#results').append(`<p><a href="${url}">${snippet}</a></p>`);
         }
     });
 }
